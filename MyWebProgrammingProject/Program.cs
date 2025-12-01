@@ -15,7 +15,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+Console.WriteLine("Merhaba Dünya");
 app.UseRouting();
 
 app.UseAuthorization();
