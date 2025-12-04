@@ -1,7 +1,18 @@
+﻿using Microsoft.AspNetCore.Identity;          // ✔ Gerekli olan
+using Microsoft.EntityFrameworkCore;           // ✔ EF Core için gerekli
+using MyWebProgrammingProject.Data;            // ✔ DbContext için gerekli
+using MyWebProgrammingProject.Models;          // ✔ ApplicationUser için gerekli
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 var app = builder.Build();
 
@@ -9,14 +20,16 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-Console.WriteLine("Merhaba D�nya");
+
 app.UseRouting();
+
+// ? Bu eksikti:
+app.UseAuthentication();
 
 app.UseAuthorization();
 
