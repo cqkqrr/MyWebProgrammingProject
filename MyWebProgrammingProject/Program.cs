@@ -70,7 +70,8 @@ static async Task CreateRolesAsync(IServiceProvider serviceProvider)
         }
     }
 
-    // Default Admin Kullanıcısı.......
+    // Default Admin Kullanıcısı........
+
     string adminEmail = "admin@sakarya.edu.tr";
     string password = "sau123";
 
