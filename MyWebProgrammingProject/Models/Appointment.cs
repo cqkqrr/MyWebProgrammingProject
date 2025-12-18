@@ -1,25 +1,19 @@
-﻿namespace MyWebProgrammingProject.Models
+﻿using MyWebProgrammingProject.Models;
+
+public class Appointment
 {
-    public class Appointment
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        // Üye (Identity User)
-        public string MemberId { get; set; }
-        public ApplicationUser Member { get; set; }
+    public DateTime AppointmentDate { get; set; }
 
-        // Antrenör
-        public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+    public int TrainerId { get; set; }
+    public Trainer Trainer { get; set; }
 
-        // Hizmet
-        public int ServiceId { get; set; }
-        public Service Service { get; set; }
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
 
-        // Randevu Zamanı
-        public DateTime AppointmentDate { get; set; }
+    public int ServiceId { get; set; }
+    public Service Service { get; set; }
 
-        public bool IsApproved { get; set; }
-    }
-
+    public bool IsApproved { get; set; }
 }

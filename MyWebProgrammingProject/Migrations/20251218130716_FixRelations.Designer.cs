@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWebProgrammingProject.Data;
 
@@ -11,9 +12,11 @@ using MyWebProgrammingProject.Data;
 namespace MyWebProgrammingProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251218130716_FixRelations")]
+    partial class FixRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,13 +89,13 @@ namespace MyWebProgrammingProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c516be96-ff2c-4ccb-8b57-42e46d76821b",
+                            Id = "a2c134d5-0b66-4001-9d68-e5d2e0c29e39",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "4afff304-1c6f-4f3f-b815-77b81f1bea0b",
+                            Id = "ab84d6a4-4b46-428f-8a7a-0f07f2062a33",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -189,8 +192,8 @@ namespace MyWebProgrammingProject.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "f90241c4-2cd1-45f2-b19e-189ebe59b6c2",
-                            RoleId = "c516be96-ff2c-4ccb-8b57-42e46d76821b"
+                            UserId = "ab87dc3b-8a3b-4959-b8f6-ee317d912eca",
+                            RoleId = "a2c134d5-0b66-4001-9d68-e5d2e0c29e39"
                         });
                 });
 
@@ -298,18 +301,18 @@ namespace MyWebProgrammingProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f90241c4-2cd1-45f2-b19e-189ebe59b6c2",
+                            Id = "ab87dc3b-8a3b-4959-b8f6-ee317d912eca",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2fcc5a61-4562-4ad2-b498-33252431ac52",
+                            ConcurrencyStamp = "7e4e3974-8266-48cf-a72a-a3204b1a1b3c",
                             Email = "g231210000@sakarya.edu.tr",
                             EmailConfirmed = true,
                             FullName = "Admin Soyad",
                             LockoutEnabled = false,
                             NormalizedEmail = "G231210000@SAKARYA.EDU.TR",
                             NormalizedUserName = "G231210000@SAKARYA.EDU.TR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ3bYZe13KMDqBlhnylVteU+TVgVoCSuGDFb8IjT5N3/Z5u2FHvm6WCqvCCk72wIkA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB/ylyhtLaPNvzbVFNfXsAPJ8/cuAbsE8o+xBavGIrHmYclACiWDJItlkiBFgvUQhQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "45177a18-38cd-4312-a12c-5095a9b2d902",
+                            SecurityStamp = "9b815825-ae8b-427c-8dea-84de98f9eadd",
                             TwoFactorEnabled = false,
                             UserName = "g231210000@sakarya.edu.tr"
                         });
