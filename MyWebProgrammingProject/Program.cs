@@ -17,7 +17,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// MVC + Razor Pages (Identity UI için)
+// MVC + Razor Pages (Identity UI için) .
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
@@ -69,8 +69,7 @@ static async Task CreateRolesAsync(IServiceProvider serviceProvider)
             await roleManager.CreateAsync(new IdentityRole(role));
         }
     }
-
-    // Default Admin Kullanıcısı........
+    
 
     string adminEmail = "admin@sakarya.edu.tr";
     string password = "sau123";
