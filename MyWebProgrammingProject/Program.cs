@@ -11,11 +11,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Identity + Roles
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false;
-})
+    options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 // MVC + Razor Pages (Identity UI için) .
 builder.Services.AddControllersWithViews();
@@ -60,7 +59,8 @@ static async Task CreateRolesAsync(IServiceProvider serviceProvider)
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    string[] roles = { "Admin", "Member" };
+    var roles = new[] { "Admin", "Member" };
+
 
     foreach (var role in roles)
     {
