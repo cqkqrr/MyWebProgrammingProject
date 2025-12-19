@@ -5,9 +5,11 @@
         public int Id { get; set; }
 
         public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+        public Trainer Trainer { get; set; }    
 
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public DateTime Date { get; set; }
+
     }
 }

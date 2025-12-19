@@ -11,18 +11,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Identity + Roles
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-    options.SignIn.RequireConfirmedAccount = false)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+{
+    options.SignIn.RequireConfirmedAccount = false;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-// MVC + Razor Pages (Identity UI için) .
+// MVC + Razor Pages
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Uygulama ayağa kalkarken rolleri ve default admin'i oluştur
+// 🔹 ROL VE ADMIN SEED
 using (var scope = app.Services.CreateScope())
 {
     await CreateRolesAsync(scope.ServiceProvider);
@@ -43,24 +44,24 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// MVC route
+app.MapControllers();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Identity’nin Razor Page’lerini de ekle (Login/Register buradan geliyor)
 app.MapRazorPages();
 
 app.Run();
 
-// ===== ROL ve DEFAULT ADMIN OLUŞTURMA METODU =====
+
+// ===== ROL ve DEFAULT ADMIN OLUŞTURMA =====
 static async Task CreateRolesAsync(IServiceProvider serviceProvider)
 {
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    var roles = new[] { "Admin", "Member" };
-
+    string[] roles = { "Admin", "Member" };
 
     foreach (var role in roles)
     {
@@ -69,7 +70,6 @@ static async Task CreateRolesAsync(IServiceProvider serviceProvider)
             await roleManager.CreateAsync(new IdentityRole(role));
         }
     }
-    
 
     string adminEmail = "admin@sakarya.edu.tr";
     string password = "sau123";

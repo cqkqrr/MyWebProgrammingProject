@@ -12,8 +12,8 @@ using MyWebProgrammingProject.Data;
 namespace MyWebProgrammingProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251218130745_SeedAdminAndRoles")]
-    partial class SeedAdminAndRoles
+    [Migration("20251219185836_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,41 +24,6 @@ namespace MyWebProgrammingProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Appointment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ServiceId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Appointments");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -89,13 +54,13 @@ namespace MyWebProgrammingProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c516be96-ff2c-4ccb-8b57-42e46d76821b",
+                            Id = "8763fe83-af84-4301-85a2-d0388dfebd1b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "4afff304-1c6f-4f3f-b815-77b81f1bea0b",
+                            Id = "a484d1d4-77a1-4a1e-9e30-de08ade0962e",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -192,8 +157,8 @@ namespace MyWebProgrammingProject.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "f90241c4-2cd1-45f2-b19e-189ebe59b6c2",
-                            RoleId = "c516be96-ff2c-4ccb-8b57-42e46d76821b"
+                            UserId = "04caee47-e5aa-41d0-b16e-23cb1127756d",
+                            RoleId = "8763fe83-af84-4301-85a2-d0388dfebd1b"
                         });
                 });
 
@@ -301,21 +266,56 @@ namespace MyWebProgrammingProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f90241c4-2cd1-45f2-b19e-189ebe59b6c2",
+                            Id = "04caee47-e5aa-41d0-b16e-23cb1127756d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2fcc5a61-4562-4ad2-b498-33252431ac52",
+                            ConcurrencyStamp = "1557f725-cd8c-4cdf-a016-c3c42c289166",
                             Email = "g231210000@sakarya.edu.tr",
                             EmailConfirmed = true,
                             FullName = "Admin Soyad",
                             LockoutEnabled = false,
                             NormalizedEmail = "G231210000@SAKARYA.EDU.TR",
                             NormalizedUserName = "G231210000@SAKARYA.EDU.TR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ3bYZe13KMDqBlhnylVteU+TVgVoCSuGDFb8IjT5N3/Z5u2FHvm6WCqvCCk72wIkA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIsFUPgfowCx7IOeDW78ey3yY2TKOnLQbTzAyd4c52tm85jB2MkZi5wPYIcV0e+D6Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "45177a18-38cd-4312-a12c-5095a9b2d902",
+                            SecurityStamp = "5f0e2ba3-e0e2-44c5-9829-24705ed46c9c",
                             TwoFactorEnabled = false,
                             UserName = "g231210000@sakarya.edu.tr"
                         });
+                });
+
+            modelBuilder.Entity("MyWebProgrammingProject.Models.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("MyWebProgrammingProject.Models.Gym", b =>
@@ -362,6 +362,7 @@ namespace MyWebProgrammingProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("TrainerId")
@@ -410,6 +411,9 @@ namespace MyWebProgrammingProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
@@ -423,34 +427,7 @@ namespace MyWebProgrammingProject.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("TrainerAvailability");
-                });
-
-            modelBuilder.Entity("Appointment", b =>
-                {
-                    b.HasOne("MyWebProgrammingProject.Models.Service", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyWebProgrammingProject.Models.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyWebProgrammingProject.Models.ApplicationUser", "User")
-                        .WithMany("Appointments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Service");
-
-                    b.Navigation("Trainer");
-
-                    b.Navigation("User");
+                    b.ToTable("TrainerAvailabilities");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -502,6 +479,33 @@ namespace MyWebProgrammingProject.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyWebProgrammingProject.Models.Appointment", b =>
+                {
+                    b.HasOne("MyWebProgrammingProject.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyWebProgrammingProject.Models.Trainer", "Trainer")
+                        .WithMany()
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyWebProgrammingProject.Models.ApplicationUser", "User")
+                        .WithMany("Appointments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Trainer");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyWebProgrammingProject.Models.Service", b =>

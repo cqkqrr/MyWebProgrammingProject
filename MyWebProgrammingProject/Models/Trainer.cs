@@ -3,8 +3,8 @@
     public class Trainer
     {
         public int Id { get; set; }
-        public string FullName { get; set; }
-        public string Expertise { get; set; } // Kas geliştirme, cardio...
+        public string FullName { get; set; } = string.Empty;
+        public string Expertise { get; set; } = string.Empty;// Kas geliştirme, cardio...
 
         // Hangi gym’de çalışıyor?
         public int GymId { get; set; }
@@ -14,7 +14,7 @@
         public List<Service> Services { get; set; }
 
         // Müsaitlik saatleri
-        public List<TrainerAvailability> Availabilities { get; set; }
+        public List<TrainerAvailability> Availabilities { get; set; } = new List<TrainerAvailability>();
     }
 
 }
