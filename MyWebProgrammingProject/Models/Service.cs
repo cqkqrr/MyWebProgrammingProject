@@ -19,12 +19,14 @@ namespace MyWebProgrammingProject.Models
         [Display(Name = "Fiyat")]
         public decimal Price { get; set; }
 
-        public ICollection<Trainer> Trainers { get; set; } = new List<Trainer>();
+        // ✅ GÜNCELLEME: Nullable (?) yaptık, yoksa validasyon hatası verir.
+        public ICollection<Trainer>? Trainers { get; set; }
 
         [Required(ErrorMessage = "Salon seçimi zorunludur.")]
         [Display(Name = "Salon")]
         public int GymId { get; set; }
 
-        public Gym Gym { get; set; } = null!;
+        // ✅ GÜNCELLEME: Nullable (?) yaptık. Formdan sadece ID gelir, nesne gelmez.
+        public Gym? Gym { get; set; }
     }
 }

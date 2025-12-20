@@ -22,41 +22,32 @@ namespace MyWebProgrammingProject.Controllers
                 .Include(s => s.Gym)
                 .OrderBy(s => s.Name)
                 .ToListAsync();
-
             return View(services);
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            var service = await _context.Services
-                .Include(s => s.Gym)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (service == null) return NotFound();
-            return View(service);
         }
 
         public async Task<IActionResult> Create()
         {
-            var vm = new ServiceFormViewModel
-            {
-                Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync()
-            };
-            return View(vm);
+            // Dropdown verisini ViewBag ile taşıyoruz
+            ViewBag.Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync();
+            return View(new Service());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ServiceFormViewModel vm)
+        public async Task<IActionResult> Create(Service service)
         {
-            vm.Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync();
-
+            // ModelState kontrolü
             if (!ModelState.IsValid)
-                return View(vm);
+            {
+                // Hata varsa dropdown'ı tekrar doldur
+                ViewBag.Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync();
+                return View(service);
+            }
 
-            _context.Services.Add(vm.Service);
+            _context.Services.Add(service);
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Hizmet başarıyla eklendi.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -65,43 +56,32 @@ namespace MyWebProgrammingProject.Controllers
             var service = await _context.Services.FindAsync(id);
             if (service == null) return NotFound();
 
-            var vm = new ServiceFormViewModel
-            {
-                Service = service,
-                Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync()
-            };
-            return View(vm);
+            ViewBag.Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync();
+            return View(service);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ServiceFormViewModel vm)
+        public async Task<IActionResult> Edit(int id, Service service)
         {
-            if (id != vm.Service.Id) return BadRequest();
-
-            vm.Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync();
+            if (id != service.Id) return BadRequest();
 
             if (!ModelState.IsValid)
-                return View(vm);
+            {
+                ViewBag.Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync();
+                return View(service);
+            }
 
-            var db = await _context.Services.FindAsync(id);
-            if (db == null) return NotFound();
-
-            db.Name = vm.Service.Name;
-            db.Duration = vm.Service.Duration;
-            db.Price = vm.Service.Price;
-            db.GymId = vm.Service.GymId;
-
+            _context.Update(service);
             await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Hizmet güncellendi.";
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var service = await _context.Services
-                .Include(s => s.Gym)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
+            var service = await _context.Services.Include(s => s.Gym).FirstOrDefaultAsync(s => s.Id == id);
             if (service == null) return NotFound();
             return View(service);
         }
@@ -116,6 +96,7 @@ namespace MyWebProgrammingProject.Controllers
                 _context.Services.Remove(service);
                 await _context.SaveChangesAsync();
             }
+            TempData["SuccessMessage"] = "Hizmet silindi.";
             return RedirectToAction(nameof(Index));
         }
     }

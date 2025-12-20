@@ -16,6 +16,7 @@ namespace MyWebProgrammingProject.Controllers
             _context = context;
         }
 
+        [AllowAnonymous] // Herkes görebilir
         public async Task<IActionResult> Index()
         {
             var trainers = await _context.Trainers
@@ -26,10 +27,9 @@ namespace MyWebProgrammingProject.Controllers
             return View(trainers);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Gyms = _context.Gyms.OrderBy(g => g.Name).ToList();
-            ViewBag.Services = _context.Services.OrderBy(s => s.Name).ToList();
+            await LoadViewBags();
             return View(new Trainer());
         }
 
@@ -39,11 +39,11 @@ namespace MyWebProgrammingProject.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Gyms = _context.Gyms.OrderBy(g => g.Name).ToList();
-                ViewBag.Services = _context.Services.OrderBy(s => s.Name).ToList();
+                await LoadViewBags();
                 return View(trainer);
             }
 
+            // ✅ SEÇİLEN HİZMETLERİ EKLEME MANTIĞI
             if (selectedServiceIds != null && selectedServiceIds.Length > 0)
             {
                 trainer.Services = await _context.Services
@@ -58,6 +58,12 @@ namespace MyWebProgrammingProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Edit, Delete ve Details metotlarını da benzer şekilde sadeleştirip kullanabilirsin.
+        // Edit, Delete metodları buraya eklenebilir (önceki kodlarındaki gibi)
+
+        private async Task LoadViewBags()
+        {
+            ViewBag.Gyms = await _context.Gyms.OrderBy(g => g.Name).ToListAsync();
+            ViewBag.Services = await _context.Services.OrderBy(s => s.Name).ToListAsync();
+        }
     }
 }

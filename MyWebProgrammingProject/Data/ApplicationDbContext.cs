@@ -22,7 +22,7 @@ namespace MyWebProgrammingProject.Data
         {
             base.OnModelCreating(builder);
 
-            // Gym
+            // Gym Ayarları
             builder.Entity<Gym>(entity =>
             {
                 entity.Property(g => g.Name).IsRequired().HasMaxLength(100);
@@ -30,12 +30,12 @@ namespace MyWebProgrammingProject.Data
                 entity.Property(g => g.WorkingHours).HasMaxLength(100);
             });
 
-            // Service.Price precision
+            // Service Fiyat Hassasiyeti
             builder.Entity<Service>()
                 .Property(s => s.Price)
                 .HasPrecision(18, 2);
 
-            // Trainer <-> Service many-to-many
+            // Trainer <-> Service (Çoka-Çok İlişki)
             builder.Entity<Trainer>()
                 .HasMany(t => t.Services)
                 .WithMany(s => s.Trainers)
@@ -53,7 +53,7 @@ namespace MyWebProgrammingProject.Data
                         .OnDelete(DeleteBehavior.Restrict)
                 );
 
-            // Appointment relations (Restrict)
+            // Randevu İlişkileri (Restrict Delete)
             builder.Entity<Appointment>()
                 .HasOne(a => a.Trainer)
                 .WithMany()
@@ -72,10 +72,10 @@ namespace MyWebProgrammingProject.Data
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // TrainerAvailability -> Trainer
+            // ✅ HATA VEREN KISIM BURASIYDI (DÜZELTİLDİ):
             builder.Entity<TrainerAvailability>()
                 .HasOne(a => a.Trainer)
-                .WithMany(t => t.Availabilities)
+                .WithMany(t => t.Availabilities) // Buradaki 't.Availabilities' doğru yazılmalı
                 .HasForeignKey(a => a.TrainerId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

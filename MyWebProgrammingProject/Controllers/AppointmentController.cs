@@ -12,7 +12,7 @@ namespace MyWebProgrammingProject.Controllers
     public class AppointmentController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IAppointmentService _appointmentService; // ✅ Servis eklendi
+        private readonly IAppointmentService _appointmentService;
 
         public AppointmentController(ApplicationDbContext context, IAppointmentService appointmentService)
         {
@@ -68,7 +68,7 @@ namespace MyWebProgrammingProject.Controllers
                 appointment.EndTime = appointment.StartTime.AddMinutes(service.Duration);
             }
 
-            // ✅ 1. Servis ile Müsaitlik Kontrolü
+            // 1. Servis ile Müsaitlik Kontrolü
             if (!await _appointmentService.IsTrainerAvailableAsync(appointment.TrainerId, appointment.StartTime, appointment.EndTime))
             {
                 ModelState.AddModelError("", "Seçilen saat aralığı, eğitmenin çalışma saatleri dışında.");
@@ -76,7 +76,7 @@ namespace MyWebProgrammingProject.Controllers
                 return View(appointment);
             }
 
-            // ✅ 2. Servis ile Çakışma Kontrolü
+            // 2. Servis ile Çakışma Kontrolü
             if (await _appointmentService.CheckConflictAsync(appointment.TrainerId, appointment.StartTime, appointment.EndTime))
             {
                 ModelState.AddModelError("", "Seçilen saatte eğitmen dolu.");
@@ -108,13 +108,63 @@ namespace MyWebProgrammingProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Yardımcı Metot
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Reject(int id)
+        {
+            var appointment = await _context.Appointments
+                .Include(a => a.User).Include(a => a.Trainer).Include(a => a.Service)
+                .FirstOrDefaultAsync(a => a.Id == id);
+            if (appointment == null) return NotFound();
+            return View(appointment);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(int id, string adminMessage)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null) return NotFound();
+
+            appointment.IsApproved = false;
+            appointment.AdminMessage = string.IsNullOrWhiteSpace(adminMessage) ? "Randevunuz reddedildi." : adminMessage;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Randevu reddedildi.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetTrainerDetails(int trainerId)
+        {
+            var trainer = await _context.Trainers
+                .Include(t => t.Availabilities)
+                .Include(t => t.Gym)
+                .FirstOrDefaultAsync(t => t.Id == trainerId);
+
+            if (trainer == null) return NotFound();
+
+            return Json(new
+            {
+                imageUrl = trainer.ImageUrl,
+                fullName = trainer.FullName,
+                expertise = trainer.Expertise,
+                gymName = trainer.Gym?.Name,
+
+                // ✅ DÜZELTME BURADA YAPILDI: a.StartTime.DayOfWeek kullanıldı
+                availabilities = trainer.Availabilities.Select(a => new {
+                    day = a.StartTime.DayOfWeek.ToString(),
+                    start = a.StartTime.ToString(@"hh\:mm"),
+                    end = a.EndTime.ToString(@"hh\:mm")
+                }).ToList()
+            });
+        }
+
         private void LoadViewBags()
         {
             ViewBag.Trainers = _context.Trainers.Include(t => t.Gym).ToList();
             ViewBag.Services = _context.Services.Include(s => s.Gym).ToList();
         }
-
-        // Reject metotlarını da buraya ekleyebilirsin, logic aynı kalır.
     }
 }

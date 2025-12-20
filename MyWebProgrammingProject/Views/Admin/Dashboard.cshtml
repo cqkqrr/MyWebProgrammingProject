@@ -1,45 +1,194 @@
 ﻿@model MyWebProgrammingProject.Models.AdminDashboardViewModel
 
 @{
-    ViewData["Title"] = "Admin Paneli";
+    ViewData["Title"] = "Yönetim Paneli";
 }
 
-<h2 class="mb-4">📊 Admin Dashboard</h2>
+<div class="container-fluid py-4">
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="card text-bg-primary mb-3">
-            <div class="card-body">
-                <h5>Toplam Üye</h5>
-                <h2>@Model.TotalMembers</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 text-white fw-bold">YÖNETİM <span style="color: #d63384;">PANELİ</span></h1>
+            <p class="text-muted">Spor salonu genel durumu ve istatistikler.</p>
+        </div>
+        <span class="badge bg-secondary p-2">Bugün: @DateTime.Now.ToString("dd MMMM yyyy")</span>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-dark text-white border-secondary h-100 shadow-sm">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-2">TOPLAM ÜYE</h6>
+                        <h2 class="fw-bold mb-0">@Model.TotalMembers</h2>
+                    </div>
+                    <div class="icon-box bg-primary bg-opacity-25 text-primary rounded-3 p-3">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white border-secondary h-100 shadow-sm">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-2">EĞİTMENLER</h6>
+                        <h2 class="fw-bold mb-0">@Model.TotalTrainers</h2>
+                    </div>
+                    <div class="icon-box bg-success bg-opacity-25 text-success rounded-3 p-3">
+                        <i class="fas fa-dumbbell fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white border-secondary h-100 shadow-sm">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-2">TOPLAM RANDEVU</h6>
+                        <h2 class="fw-bold mb-0">@Model.TotalAppointments</h2>
+                    </div>
+                    <div class="icon-box bg-info bg-opacity-25 text-info rounded-3 p-3">
+                        <i class="fas fa-calendar-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white border-secondary h-100 shadow-sm" style="@(Model.PendingAppointmentsCount > 0 ? "border-color: #d63384 !important;" : "")">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-2">ONAY BEKLEYEN</h6>
+                        <h2 class="fw-bold mb-0 text-danger">@Model.PendingAppointmentsCount</h2>
+                    </div>
+                    <div class="icon-box bg-danger bg-opacity-25 text-danger rounded-3 p-3">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card text-bg-success mb-3">
-            <div class="card-body">
-                <h5>Toplam Eğitmen</h5>
-                <h2>@Model.TotalTrainers</h2>
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card bg-dark text-white border-secondary h-100">
+                <div class="card-header border-secondary bg-transparent d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">⏳ Son Bekleyen Randevular</h5>
+                    <a asp-controller="Appointment" asp-action="Index" class="btn btn-sm btn-outline-light">Tümünü Gör</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0 align-middle">
+                            <thead class="table-secondary text-dark">
+                                <tr>
+                                    <th>Üye</th>
+                                    <th>Eğitmen</th>
+                                    <th>Hizmet</th>
+                                    <th>Tarih</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.PendingAppointments.Any())
+                                {
+                                    @foreach (var item in Model.PendingAppointments)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">@item.User?.FullName</td>
+                                            <td>@item.Trainer?.FullName</td>
+                                            <td><span class="badge bg-secondary">@item.Service?.Name</span></td>
+                                            <td>@item.StartTime.ToString("dd.MM HH:mm")</td>
+                                            <td>
+                                                <a asp-controller="Appointment" asp-action="Approve" asp-route-id="@item.Id" class="btn btn-sm btn-success" title="Onayla">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                                <a asp-controller="Appointment" asp-action="Reject" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Reddet">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">Bekleyen randevu yok. Harika! 🎉</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card text-bg-warning mb-3">
-            <div class="card-body">
-                <h5>Toplam Randevu</h5>
-                <h2>@Model.TotalAppointments</h2>
+        <div class="col-lg-4 mb-4">
+            <div class="card bg-dark text-white border-secondary mb-4">
+                <div class="card-header border-secondary bg-transparent">
+                    <h5 class="mb-0">📊 Hizmet Popülerliği</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="servicesChart" height="200"></canvas>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card text-bg-danger mb-3">
-            <div class="card-body">
-                <h5>Onay Bekleyen</h5>
-                <h2>@Model.PendingAppointments</h2>
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-header border-secondary bg-transparent">
+                    <h5 class="mb-0">⚡ Hızlı İşlemler</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Trainer" asp-action="Create" class="btn btn-outline-info text-start">
+                            <i class="fas fa-user-plus me-2"></i> Yeni Eğitmen Ekle
+                        </a>
+                        <a asp-controller="Service" asp-action="Create" class="btn btn-outline-warning text-start">
+                            <i class="fas fa-tags me-2"></i> Yeni Hizmet Ekle
+                        </a>
+                        <a asp-controller="Gym" asp-action="Index" class="btn btn-outline-success text-start">
+                            <i class="fas fa-building me-2"></i> Salonları Yönet
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Grafiği Oluştur
+    var ctx = document.getElementById('servicesChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.ServiceNames)),
+            datasets: [{
+                label: 'Randevu Sayısı',
+                data: @Html.Raw(Json.Serialize(Model.ServicePopularity)),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)'
+                ],
+                borderColor: '#1e1e1e',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: 'white' }
+                }
+            }
+        }
+    });
+</script>

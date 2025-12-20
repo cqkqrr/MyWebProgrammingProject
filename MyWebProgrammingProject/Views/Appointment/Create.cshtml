@@ -1,49 +1,221 @@
 ﻿@model MyWebProgrammingProject.Models.Appointment
-@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Randevu Al";
 }
 
-<h2>Randevu Al</h2>
-<hr />
+<div class="container py-5">
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-
-    <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
-    <div class="mb-3">
-        <label asp-for="TrainerId" class="form-label">Eğitmen</label>
-        <select asp-for="TrainerId"
-                class="form-select"
-                asp-items="@(new SelectList(ViewBag.Trainers, "Id", "FullName"))">
-            <option value="">-- Eğitmen Seç --</option>
-        </select>
-        <span asp-validation-for="TrainerId" class="text-danger"></span>
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-white">RANDEVU <span class="text-warning">OLUŞTUR</span></h1>
+        <p class="text-muted">Kendine bir iyilik yap ve harekete geç.</p>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="ServiceId" class="form-label">Hizmet</label>
-        <select asp-for="ServiceId"
-                class="form-select"
-                asp-items="@(new SelectList(ViewBag.Services, "Id", "Name"))">
-            <option value="">-- Hizmet Seç --</option>
-        </select>
-        <span asp-validation-for="ServiceId" class="text-danger"></span>
-        <div class="form-text">Bitiş saati hizmet süresinden otomatik hesaplanır.</div>
-    </div>
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <div class="card bg-dark text-white border-secondary shadow-lg">
+                <div class="card-header border-secondary bg-transparent py-3">
+                    <h5 class="mb-0"><i class="fas fa-edit me-2 text-warning"></i>Seçimlerini Yap</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" id="appointmentForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="mb-3">
-        <label asp-for="StartTime" class="form-label">Başlangıç Saati</label>
-        <input asp-for="StartTime" class="form-control" type="datetime-local" />
-        <span asp-validation-for="StartTime" class="text-danger"></span>
-    </div>
+                        <div class="mb-4">
+                            <label asp-for="TrainerId" class="form-label text-muted text-uppercase small fw-bold">Eğitmen</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white"><i class="fas fa-user-ninja"></i></span>
+                                <select asp-for="TrainerId" class="form-select bg-dark text-white border-secondary"
+                                        asp-items="@(new SelectList(ViewBag.Trainers, "Id", "FullName"))"
+                                        id="trainerSelect">
+                                    <option value="" data-name="">-- Eğitmen Seçiniz --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="TrainerId" class="text-danger small"></span>
+                        </div>
 
-    <button type="submit" class="btn btn-primary">Randevu Al</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
-</form>
+                        <div class="mb-4">
+                            <label asp-for="ServiceId" class="form-label text-muted text-uppercase small fw-bold">Hizmet / Ders</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white"><i class="fas fa-dumbbell"></i></span>
+                                <select asp-for="ServiceId" class="form-select bg-dark text-white border-secondary"
+                                        asp-items="@(new SelectList(ViewBag.Services, "Id", "Name"))"
+                                        id="serviceSelect">
+                                    <option value="" data-name="" data-duration="0" data-price="0">-- Hizmet Seçiniz --</option>
+                                    @foreach (var service in (List<MyWebProgrammingProject.Models.Service>)ViewBag.Services)
+                                    {
+                                        <option value="@service.Id" data-name="@service.Name" data-duration="@service.Duration" data-price="@service.Price">
+                                            @service.Name (@service.Duration dk - @service.Price.ToString("C0"))
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <span asp-validation-for="ServiceId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="StartTime" class="form-label text-muted text-uppercase small fw-bold">Tarih ve Saat</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white"><i class="fas fa-clock"></i></span>
+
+                                <input asp-for="StartTime"
+                                       class="form-control bg-dark text-white border-secondary"
+                                       type="datetime-local"
+                                       id="dateInput"
+                                       step="1800"
+                                       min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            </div>
+                            <span asp-validation-for="StartTime" class="text-danger small"></span>
+                            <div class="form-text text-muted small mt-2">
+                                <i class="fas fa-info-circle me-1"></i> Randevular sadece 30 dakikalık periyotlarla (Örn: 14:00, 14:30) alınabilir.
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-success btn-lg py-3 fw-bold shadow-sm hover-scale">
+                                <i class="fas fa-check-circle me-2"></i> RANDEVUYU ONAYLA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card bg-dark text-white border-secondary border-dashed sticky-top" style="top: 100px; border-style: dashed !important;">
+                <div class="card-body p-4 text-center">
+                    <h6 class="text-muted text-uppercase mb-4">Randevu Özeti</h6>
+
+                    <div class="mb-4">
+                        <small class="text-muted d-block">EĞİTMEN</small>
+                        <h4 class="fw-bold text-warning" id="summaryTrainer">-</h4>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-6 border-end border-secondary">
+                            <small class="text-muted d-block">HİZMET</small>
+                            <span class="fw-bold" id="summaryService">-</span>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">SÜRE</small>
+                            <span class="fw-bold" id="summaryDuration">- dk</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <small class="text-muted d-block">TARİH & SAAT</small>
+                        <h3 class="fw-bold text-white mb-0" id="summaryTime">--:--</h3>
+                        <small class="text-muted" id="summaryDate">Tarih Seçilmedi</small>
+                    </div>
+
+                    <hr class="border-secondary" />
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Tahmini Ücret</span>
+                        <h3 class="fw-bold text-success mb-0" id="summaryPrice">₺0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // DOM Elementlerini Seç
+        const trainerSelect = document.getElementById('trainerSelect');
+        const serviceSelect = document.getElementById('serviceSelect');
+        const dateInput = document.getElementById('dateInput');
+
+        // Özet Alanları
+        const sTrainer = document.getElementById('summaryTrainer');
+        const sService = document.getElementById('summaryService');
+        const sDuration = document.getElementById('summaryDuration');
+        const sPrice = document.getElementById('summaryPrice');
+        const sTime = document.getElementById('summaryTime');
+        const sDate = document.getElementById('summaryDate');
+
+        // Olay Dinleyicileri (Change Events)
+        trainerSelect.addEventListener('change', updateSummary);
+        serviceSelect.addEventListener('change', updateSummary);
+
+        // Tarih değişince hem özeti güncelle hem de dakikayı kontrol et
+        dateInput.addEventListener('change', function() {
+            validateMinuteStep(this);
+            updateSummary();
+        });
+
+        // 30 Dakika Kontrolü (Ek Güvenlik)
+        function validateMinuteStep(input) {
+            if (!input.value) return;
+
+            const date = new Date(input.value);
+            const minutes = date.getMinutes();
+
+            // Eğer dakika 0 veya 30 değilse kullanıcıyı uyar ve sıfırla
+            if (minutes !== 0 && minutes !== 30) {
+                alert("Lütfen sadece buçuklu (30) veya tam saatleri (00) seçiniz.");
+                input.value = ""; // Seçimi temizle
+                updateSummary();
+            }
+        }
+
+        function updateSummary() {
+            // 1. Eğitmen Güncelle
+            if (trainerSelect.selectedIndex > 0) {
+                sTrainer.innerText = trainerSelect.options[trainerSelect.selectedIndex].text;
+            } else {
+                sTrainer.innerText = "-";
+            }
+
+            // 2. Hizmet Bilgilerini Güncelle
+            const selectedService = serviceSelect.options[serviceSelect.selectedIndex];
+            if (serviceSelect.selectedIndex > 0) {
+                const name = selectedService.getAttribute('data-name');
+                const duration = selectedService.getAttribute('data-duration');
+                const price = selectedService.getAttribute('data-price');
+
+                sService.innerText = name;
+                sDuration.innerText = duration + " dk";
+                sPrice.innerText = "₺" + parseFloat(price).toLocaleString('tr-TR');
+            } else {
+                sService.innerText = "-";
+                sDuration.innerText = "- dk";
+                sPrice.innerText = "₺0";
+            }
+
+            // 3. Tarih ve Saat Güncelle
+            if (dateInput.value) {
+                const dateObj = new Date(dateInput.value);
+
+                // Saat:Dakika
+                const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+                sTime.innerText = timeStr;
+
+                // Gün Ay Yıl
+                const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
+                sDate.innerText = dateStr;
+            } else {
+                sTime.innerText = "--:--";
+                sDate.innerText = "Tarih Seçilmedi";
+            }
+        }
+    </script>
+
+    <style>
+        .hover-scale {
+            transition: transform 0.2s;
+        }
+
+            .hover-scale:hover {
+                transform: scale(1.02);
+            }
+
+        .border-dashed {
+            border-style: dashed !important;
+            border-width: 2px !important;
+        }
+    </style>
 }

@@ -13,27 +13,28 @@ namespace MyWebProgrammingProject.Services
             _context = context;
         }
 
+        // KURAL 1: Eğitmen o saatte çalışıyor mu? (Shift Kontrolü)
         public async Task<bool> IsTrainerAvailableAsync(int trainerId, DateTime start, DateTime end)
         {
-            // Eğitmenin çalışma saatleri içinde mi?
+            // Eğitmenin o tarih ve saat aralığını kapsayan bir "Availability" kaydı var mı?
             return await _context.TrainerAvailabilities.AnyAsync(a =>
                 a.TrainerId == trainerId &&
-                start >= a.StartTime &&
-                end <= a.EndTime
+                start >= a.StartTime && // Randevu başlangıcı, mesai başlangıcından sonra veya eşit olmalı
+                end <= a.EndTime        // Randevu bitişi, mesai bitişinden önce veya eşit olmalı
             );
         }
 
+        // KURAL 2: Çakışma Kontrolü (Conflict Check)
         public async Task<bool> CheckConflictAsync(int trainerId, DateTime start, DateTime end)
         {
-            // Çakışan başka randevu var mı?
+            // Veritabanındaki diğer randevularla çakışıyor mu?
+            // Formül: (YeniBaslangic < EskiBitis) VE (YeniBitis > EskiBaslangic)
+
             return await _context.Appointments.AnyAsync(a =>
                 a.TrainerId == trainerId &&
-                a.IsApproved &&
-                (
-                    (start >= a.StartTime && start < a.EndTime) ||
-                    (end > a.StartTime && end <= a.EndTime) ||
-                    (start <= a.StartTime && end >= a.EndTime)
-                )
+                // a.IsApproved && // İstersen sadece onaylılar çakışsın, ama genelde bekleyenler de bloke etmeli
+                start < a.EndTime &&
+                end > a.StartTime
             );
         }
     }
