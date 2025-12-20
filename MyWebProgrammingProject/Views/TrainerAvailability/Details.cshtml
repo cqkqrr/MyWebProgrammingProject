@@ -1,0 +1,28 @@
+﻿@model MyWebProgrammingProject.Models.TrainerAvailability
+
+@{
+    ViewData["Title"] = "Müsaitlik Detay";
+}
+
+<h2 class="mb-3">🔎 Müsaitlik Detay</h2>
+
+<div class="card shadow-sm p-3">
+    <dl class="row mb-0">
+        <dt class="col-sm-3">Eğitmen</dt>
+        <dd class="col-sm-9">@Model.Trainer.FullName</dd>
+
+        <dt class="col-sm-3">Başlangıç</dt>
+        <dd class="col-sm-9">@Model.StartTime.ToString("dd.MM.yyyy HH:mm")</dd>
+
+        <dt class="col-sm-3">Bitiş</dt>
+        <dd class="col-sm-9">@Model.EndTime.ToString("dd.MM.yyyy HH:mm")</dd>
+
+        <dt class="col-sm-3">Tarih</dt>
+        <dd class="col-sm-9">@Model.Date.ToString("dd.MM.yyyy")</dd>
+    </dl>
+
+    <div class="d-flex gap-2 mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Düzenle</a>
+        <a asp-action="Index" class="btn btn-secondary">Geri</a>
+    </div>
+</div>

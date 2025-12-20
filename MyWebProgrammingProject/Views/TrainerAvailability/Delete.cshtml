@@ -1,0 +1,23 @@
+﻿@model MyWebProgrammingProject.Models.TrainerAvailability
+
+@{
+    ViewData["Title"] = "Müsaitlik Sil";
+}
+
+<h2 class="mb-3">🗑️ Müsaitlik Sil</h2>
+
+<div class="alert alert-warning">
+    Bu müsaitlik kaydını silmek istediğine emin misin?
+</div>
+
+<div class="card shadow-sm p-3">
+    <p><strong>Eğitmen:</strong> @Model.Trainer.FullName</p>
+    <p><strong>Zaman:</strong> @Model.StartTime.ToString("dd.MM.yyyy HH:mm") - @Model.EndTime.ToString("HH:mm")</p>
+
+    <form asp-action="Delete" method="post" class="mt-2">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Sil</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+    </form>
+</div>

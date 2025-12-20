@@ -15,14 +15,13 @@ namespace MyWebProgrammingProject.Controllers.Api
             _context = context;
         }
 
-        // ----------------------------
-        // 1️⃣ TÜM EĞİTMENLER
         // GET: /api/trainersapi
-        // ----------------------------
+        // LINQ: Select + Include join (Gym)
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var trainers = await _context.Trainers
+                .Include(t => t.Gym)
                 .Select(t => new
                 {
                     t.Id,
@@ -35,20 +34,15 @@ namespace MyWebProgrammingProject.Controllers.Api
             return Ok(trainers);
         }
 
-        // ----------------------------
-        // 2️⃣ TARİHE GÖRE MÜSAİT EĞİTMENLER
         // GET: /api/trainersapi/available?date=2025-01-01
-        // ----------------------------
+        // Bir gün içinde EN AZ 1 availability kaydı olan eğitmenler
         [HttpGet("available")]
         public async Task<IActionResult> GetAvailableTrainers(DateTime date)
         {
             var trainers = await _context.Trainers
-                .Where(t =>
-                    !_context.Appointments.Any(a =>
-                        a.TrainerId == t.Id &&
-                        a.StartTime.Date == date.Date
-                    )
-                )
+                .Where(t => _context.TrainerAvailabilities.Any(a =>
+                    a.TrainerId == t.Id &&
+                    a.Date.Date == date.Date))
                 .Select(t => new
                 {
                     t.Id,

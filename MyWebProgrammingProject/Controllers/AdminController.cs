@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebProgrammingProject.Data;
-using MyWebProgrammingProject.Models; // BU SATIRI EKLEDİK
+using MyWebProgrammingProject.Models;
 
 namespace MyWebProgrammingProject.Controllers
 {
@@ -15,9 +15,14 @@ namespace MyWebProgrammingProject.Controllers
             _context = context;
         }
 
+        // /Admin -> /Admin/Dashboard
+        public IActionResult Index()
+        {
+            return RedirectToAction(nameof(Dashboard));
+        }
+
         public IActionResult Dashboard()
         {
-            // Eğer AdminDashboardViewModel sınıfın Models klasöründeyse artık hata vermez
             var model = new AdminDashboardViewModel
             {
                 TotalMembers = _context.Users.Count(),

@@ -1,8 +1,15 @@
 ﻿@model MyWebProgrammingProject.Models.Appointment
 
+@{
+    ViewData["Title"] = "Randevu Reddet";
+}
+
 <h3>Randevu Reddet</h3>
 
-<form method="post">
+<form asp-action="Reject" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+
     <div class="mb-3">
         <label class="form-label">Red Nedeni</label>
         <textarea name="adminMessage" class="form-control" rows="4" required></textarea>

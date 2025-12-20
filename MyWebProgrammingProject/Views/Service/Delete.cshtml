@@ -1,0 +1,25 @@
+﻿@model MyWebProgrammingProject.Models.Service
+
+@{
+    ViewData["Title"] = "Hizmet Sil";
+}
+
+<h2 class="mb-3 text-danger">Hizmet Sil</h2>
+
+<div class="alert alert-warning">
+    Bu hizmeti silmek istediğine emin misin?
+</div>
+
+<div class="card shadow-sm p-3">
+    <p><strong>Hizmet:</strong> @Model.Name</p>
+    <p><strong>Süre:</strong> @Model.Duration dk</p>
+    <p><strong>Fiyat:</strong> @Model.Price.ToString("0.00")</p>
+    <p><strong>Salon:</strong> @Model.Gym?.Name</p>
+
+    <form asp-action="Delete" method="post" class="mt-2">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+        <a class="btn btn-secondary" asp-action="Index">İptal</a>
+    </form>
+</div>

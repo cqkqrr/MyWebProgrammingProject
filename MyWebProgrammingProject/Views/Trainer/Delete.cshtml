@@ -1,0 +1,24 @@
+﻿@model MyWebProgrammingProject.Models.Trainer
+
+@{
+    ViewData["Title"] = "Eğitmen Sil";
+}
+
+<h2 class="mb-3 text-danger">🗑️ Eğitmen Sil</h2>
+
+<div class="alert alert-warning">
+    Bu eğitmeni silmek istediğine emin misin?
+</div>
+
+<div class="card shadow-sm p-3">
+    <p><strong>Ad Soyad:</strong> @Model.FullName</p>
+    <p><strong>Uzmanlık:</strong> @Model.Expertise</p>
+    <p><strong>Salon:</strong> @Model.Gym?.Name</p>
+
+    <form asp-action="Delete" method="post" class="mt-2">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+    </form>
+</div>

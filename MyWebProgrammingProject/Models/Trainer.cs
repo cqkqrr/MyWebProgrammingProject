@@ -1,21 +1,28 @@
-﻿namespace MyWebProgrammingProject.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MyWebProgrammingProject.Models
 {
     public class Trainer
     {
         public int Id { get; set; }
-        public string FullName { get; set; } = string.Empty;
-        public string Expertise { get; set; } = string.Empty;// Kas geliştirme, cardio...
-        public ICollection<Service> Services { get; set; } = new List<Service>();
 
-        // Hangi gym’de çalışıyor?
+        [Required(ErrorMessage = "Ad Soyad zorunludur.")]
+        [StringLength(100, ErrorMessage = "Ad Soyad en fazla 100 karakter olabilir.")]
+        [Display(Name = "Ad Soyad")]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Uzmanlık zorunludur.")]
+        [StringLength(100, ErrorMessage = "Uzmanlık en fazla 100 karakter olabilir.")]
+        [Display(Name = "Uzmanlık")]
+        public string Expertise { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Salon seçimi zorunludur.")]
+        [Display(Name = "Salon")]
         public int GymId { get; set; }
+
         public Gym Gym { get; set; } = null!;
 
-        // Hangi hizmetleri verebiliyor?
-
-
-        // Müsaitlik saatleri
+        public ICollection<Service> Services { get; set; } = new List<Service>();
         public List<TrainerAvailability> Availabilities { get; set; } = new List<TrainerAvailability>();
     }
-
 }

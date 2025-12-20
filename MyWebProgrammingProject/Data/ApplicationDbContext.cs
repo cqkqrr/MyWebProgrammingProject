@@ -22,9 +22,7 @@ namespace MyWebProgrammingProject.Data
         {
             base.OnModelCreating(builder);
 
-            // ===============================================
-            // GYM (SALON) YAPILANDIRMASI
-            // ===============================================
+            // Gym
             builder.Entity<Gym>(entity =>
             {
                 entity.Property(g => g.Name).IsRequired().HasMaxLength(100);
@@ -32,9 +30,12 @@ namespace MyWebProgrammingProject.Data
                 entity.Property(g => g.WorkingHours).HasMaxLength(100);
             });
 
-            // ===============================================
-            // TRAINER - SERVICE MANY TO MANY (MEVCUT KODUN)
-            // ===============================================
+            // Service.Price precision
+            builder.Entity<Service>()
+                .Property(s => s.Price)
+                .HasPrecision(18, 2);
+
+            // Trainer <-> Service many-to-many
             builder.Entity<Trainer>()
                 .HasMany(t => t.Services)
                 .WithMany(s => s.Trainers)
@@ -52,21 +53,31 @@ namespace MyWebProgrammingProject.Data
                         .OnDelete(DeleteBehavior.Restrict)
                 );
 
-            // ===============================================
-            // APPOINTMENT → TRAINER CASCADE FIX (MEVCUT KODUN)
-            // ===============================================
+            // Appointment relations (Restrict)
             builder.Entity<Appointment>()
                 .HasOne(a => a.Trainer)
                 .WithMany()
                 .HasForeignKey(a => a.TrainerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ===============================================
-            // SERVICE PRICE PRECISION (MEVCUT KODUN)
-            // ===============================================
-            builder.Entity<Service>()
-                .Property(s => s.Price)
-                .HasPrecision(18, 2);
+            builder.Entity<Appointment>()
+                .HasOne(a => a.Service)
+                .WithMany()
+                .HasForeignKey(a => a.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Appointment>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // TrainerAvailability -> Trainer
+            builder.Entity<TrainerAvailability>()
+                .HasOne(a => a.Trainer)
+                .WithMany(t => t.Availabilities)
+                .HasForeignKey(a => a.TrainerId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

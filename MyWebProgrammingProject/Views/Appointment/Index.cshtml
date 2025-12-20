@@ -1,50 +1,85 @@
-﻿@{
-    ViewData["Title"] = "Ana Sayfa";
+﻿@model IEnumerable<MyWebProgrammingProject.Models.Appointment>
+
+@{
+    ViewData["Title"] = User.IsInRole("Admin") ? "Randevular" : "Randevularım";
 }
 
-<div class="container mt-4">
-    <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold">Spor Salonu Yönetim Sistemi</h1>
-        <p class="text-muted">Randevu al, antrenörlerle çalış, sana özel öneriler al</p>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">@(User.IsInRole("Admin") ? "Randevular" : "Randevularım")</h2>
 
-    <div class="row g-4">
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Randevu Al</h5>
-                    <p class="card-text">Uygun eğitmenlerle hemen randevu oluştur.</p>
-                    <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary">
-                        Randevu Al
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Randevularım</h5>
-                    <p class="card-text">Geçmiş ve aktif randevularını görüntüle.</p>
-                    <a asp-controller="Appointment" asp-action="Index" class="btn btn-outline-primary">
-                        Görüntüle
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">AI Egzersiz Önerisi</h5>
-                    <p class="card-text">Hedeflerine göre yapay zekâdan öneri al.</p>
-                    <a href="#" class="btn btn-success">
-                        Öneri Al
-                    </a>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    @if (User.IsInRole("Member"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Yeni Randevu</a>
+    }
 </div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Henüz randevu yok.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th>Üye</th>
+                    }
+                    <th>Eğitmen</th>
+                    <th>Hizmet</th>
+                    <th>Başlangıç</th>
+                    <th>Bitiş</th>
+                    <th>Durum</th>
+                    <th>Mesaj</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th class="text-end">İşlem</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>@(a.User?.Email ?? a.UserId)</td>
+                        }
+                        <td>@a.Trainer?.FullName</td>
+                        <td>@a.Service?.Name</td>
+                        <td>@a.StartTime.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@a.EndTime.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            @if (a.IsApproved)
+                            {
+                                <span class="badge bg-success">Onaylandı</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Bekliyor</span>
+                            }
+                        </td>
+                        <td>@(string.IsNullOrWhiteSpace(a.AdminMessage) ? "-" : a.AdminMessage)</td>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td class="text-end">
+                                @if (!a.IsApproved)
+                                {
+                                    <a class="btn btn-sm btn-outline-success" asp-action="Approve" asp-route-id="@a.Id">Onayla</a>
+                                    <a class="btn btn-sm btn-outline-danger" asp-action="Reject" asp-route-id="@a.Id">Reddet</a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

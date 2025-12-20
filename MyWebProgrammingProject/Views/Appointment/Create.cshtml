@@ -9,11 +9,10 @@
 <hr />
 
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
 
-    <!-- GENEL HATA MESAJLARI -->
     <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-    <!-- EĞİTMEN -->
     <div class="mb-3">
         <label asp-for="TrainerId" class="form-label">Eğitmen</label>
         <select asp-for="TrainerId"
@@ -21,9 +20,9 @@
                 asp-items="@(new SelectList(ViewBag.Trainers, "Id", "FullName"))">
             <option value="">-- Eğitmen Seç --</option>
         </select>
+        <span asp-validation-for="TrainerId" class="text-danger"></span>
     </div>
 
-    <!-- HİZMET -->
     <div class="mb-3">
         <label asp-for="ServiceId" class="form-label">Hizmet</label>
         <select asp-for="ServiceId"
@@ -31,31 +30,20 @@
                 asp-items="@(new SelectList(ViewBag.Services, "Id", "Name"))">
             <option value="">-- Hizmet Seç --</option>
         </select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+        <div class="form-text">Bitiş saati hizmet süresinden otomatik hesaplanır.</div>
     </div>
 
-    <!-- BAŞLANGIÇ SAATİ -->
     <div class="mb-3">
         <label asp-for="StartTime" class="form-label">Başlangıç Saati</label>
-        <input asp-for="StartTime"
-               class="form-control"
-               type="datetime-local" />
-    </div>
-
-    <!-- BİTİŞ SAATİ -->
-    <div class="mb-3">
-        <label asp-for="EndTime" class="form-label">Bitiş Saati</label>
-        <input asp-for="EndTime"
-               class="form-control"
-               type="datetime-local" />
+        <input asp-for="StartTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Randevu Al</button>
     <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
-
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }
