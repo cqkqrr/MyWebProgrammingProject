@@ -71,6 +71,11 @@ app.MapRazorPages();
 
 app.Run();
 
+using (var scope = app.Services.CreateScope())
+{
+    await CreateRolesAndAdminAsync(scope.ServiceProvider);
+    await SeedDataAsync(scope.ServiceProvider); // 👈 Bu satırı ekle
+}
 
 // =====================================================
 // 🔐 ROLE + ADMIN OLUŞTURMA (FINAL, BUGSIZ)
@@ -123,5 +128,22 @@ static async Task CreateRolesAndAdminAsync(IServiceProvider serviceProvider)
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }
+    }
+}
+static async Task SeedDataAsync(IServiceProvider serviceProvider)
+{
+    var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+    // Eğer veritabanında hiç salon yoksa örnek bir tane ekleyelim
+    if (!context.Gyms.Any())
+    {
+        var sampleGym = new Gym
+        {
+            Name = "Sau Fitness Center",
+            Address = "Sakarya Üniversitesi Kampüsü",
+            WorkingHours = "08:00 - 22:00"
+        };
+        context.Gyms.Add(sampleGym);
+        await context.SaveChangesAsync();
     }
 }

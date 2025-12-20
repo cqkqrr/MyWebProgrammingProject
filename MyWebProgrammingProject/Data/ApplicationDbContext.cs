@@ -22,9 +22,19 @@ namespace MyWebProgrammingProject.Data
         {
             base.OnModelCreating(builder);
 
-            // ===============================
-            // TRAINER - SERVICE MANY TO MANY
-            // ===============================
+            // ===============================================
+            // GYM (SALON) YAPILANDIRMASI
+            // ===============================================
+            builder.Entity<Gym>(entity =>
+            {
+                entity.Property(g => g.Name).IsRequired().HasMaxLength(100);
+                entity.Property(g => g.Address).HasMaxLength(500);
+                entity.Property(g => g.WorkingHours).HasMaxLength(100);
+            });
+
+            // ===============================================
+            // TRAINER - SERVICE MANY TO MANY (MEVCUT KODUN)
+            // ===============================================
             builder.Entity<Trainer>()
                 .HasMany(t => t.Services)
                 .WithMany(s => s.Trainers)
@@ -42,18 +52,18 @@ namespace MyWebProgrammingProject.Data
                         .OnDelete(DeleteBehavior.Restrict)
                 );
 
-            // ===============================
-            // APPOINTMENT → TRAINER CASCADE FIX
-            // ===============================
+            // ===============================================
+            // APPOINTMENT → TRAINER CASCADE FIX (MEVCUT KODUN)
+            // ===============================================
             builder.Entity<Appointment>()
                 .HasOne(a => a.Trainer)
                 .WithMany()
                 .HasForeignKey(a => a.TrainerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ===============================
-            // SERVICE PRICE PRECISION
-            // ===============================
+            // ===============================================
+            // SERVICE PRICE PRECISION (MEVCUT KODUN)
+            // ===============================================
             builder.Entity<Service>()
                 .Property(s => s.Price)
                 .HasPrecision(18, 2);

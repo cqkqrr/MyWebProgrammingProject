@@ -57,6 +57,9 @@
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Gym" asp-action="Index">Salon Yönetimi</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" asp-controller="Trainer" asp-action="Index">
                                         🏋️ Eğitmenler
                                     </a>
