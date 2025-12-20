@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyWebProgrammingProject.Data;
 using MyWebProgrammingProject.Models;
+using MyWebProgrammingProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,10 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// ✅ Gemini REST için
+builder.Services.AddHttpClient("Gemini");
+builder.Services.AddScoped<IAiRecommendationService, GeminiRestRecommendationService>();
 
 var app = builder.Build();
 

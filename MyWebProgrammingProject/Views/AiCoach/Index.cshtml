@@ -1,0 +1,77 @@
+﻿@model MyWebProgrammingProject.Models.AiCoachViewModel
+
+@{
+    ViewData["Title"] = "AI Koç";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">🤖 AI Koç (Gemini REST)</h5>
+                </div>
+
+                <div class="card-body">
+                    <p class="text-muted mb-4">
+                        Boy/kilo/vücut tipi ve hedef bilgilerine göre antrenman + beslenme önerisi üretir.
+                    </p>
+
+                    <form asp-action="Index" method="post" class="row g-3">
+                        @Html.AntiForgeryToken()
+
+                        <div class="col-md-6">
+                            <label asp-for="HeightCm" class="form-label"></label>
+                            <input asp-for="HeightCm" class="form-control" />
+                            <span asp-validation-for="HeightCm" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="WeightKg" class="form-label"></label>
+                            <input asp-for="WeightKg" class="form-control" />
+                            <span asp-validation-for="WeightKg" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="BodyType" class="form-label"></label>
+                            <select asp-for="BodyType" class="form-select">
+                                <option value="">Seçiniz</option>
+                                <option>Ektomorf</option>
+                                <option>Mezomorf</option>
+                                <option>Endomorf</option>
+                                <option>Karışık</option>
+                            </select>
+                            <span asp-validation-for="BodyType" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Goal" class="form-label"></label>
+                            <input asp-for="Goal" class="form-control" placeholder="örn: yağ yakma, kas kazanma, kondisyon" />
+                            <span asp-validation-for="Goal" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Öneri Üret</button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Geri</a>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mt-2"></div>
+                    </form>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.AiResult))
+                    {
+                        <hr />
+                        <h6 class="fw-bold">✅ AI Önerileri</h6>
+                        <div class="bg-light border rounded p-3" style="white-space: pre-wrap;">@Model.AiResult</div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
