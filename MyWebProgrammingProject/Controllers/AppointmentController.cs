@@ -32,6 +32,33 @@ public class AppointmentController : Controller
         return View();
     }
 
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Approve(int id)
+    {
+        var appointment = await _context.Appointments.FindAsync(id);
+        if (appointment == null) return NotFound();
+
+        appointment.IsApproved = true;
+        appointment.AdminMessage = "Randevunuz onaylanmıştır. Görüşmek üzere 💪";
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Reject(int id, string adminMessage)
+    {
+        var appointment = await _context.Appointments.FindAsync(id);
+        if (appointment == null) return NotFound();
+
+        appointment.IsApproved = false;
+        appointment.AdminMessage = adminMessage;
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]

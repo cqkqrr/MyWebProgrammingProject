@@ -1,0 +1,45 @@
+﻿@model MyWebProgrammingProject.Models.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+<h2 class="mb-4">📊 Admin Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-bg-primary mb-3">
+            <div class="card-body">
+                <h5>Toplam Üye</h5>
+                <h2>@Model.TotalMembers</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-success mb-3">
+            <div class="card-body">
+                <h5>Toplam Eğitmen</h5>
+                <h2>@Model.TotalTrainers</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-warning mb-3">
+            <div class="card-body">
+                <h5>Toplam Randevu</h5>
+                <h2>@Model.TotalAppointments</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-danger mb-3">
+            <div class="card-body">
+                <h5>Onay Bekleyen</h5>
+                <h2>@Model.PendingAppointments</h2>
+            </div>
+        </div>
+    </div>
+</div>

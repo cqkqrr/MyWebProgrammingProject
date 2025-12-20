@@ -29,5 +29,9 @@
         // ----------------------------
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
+
+        public string? AdminMessage { get; set; }  // Onay / Red mesajı
+
+
     }
 }
