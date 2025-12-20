@@ -1,50 +1,108 @@
 ﻿@{
     ViewData["Title"] = "Ana Sayfa";
+    Layout = "_Layout"; // Yeni layout'u kullandığından emin olalım
 }
 
-<div class="container mt-4">
-    <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold">Spor Salonu Yönetim Sistemi</h1>
-        <p class="text-muted">Randevu al, antrenörlerle çalış, yönetimi admin panelinden yap</p>
-    </div>
-
-    <div class="row g-4">
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Randevu Al</h5>
-                    <p class="card-text">Uygun eğitmenlerle hemen randevu oluştur.</p>
-                    <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary">
-                        Randevu Al
-                    </a>
-                </div>
-            </div>
+<div class="hero-wrapper">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">
+            KENDİNİ <br>
+            <span>YENİDEN</span> İNŞA ET
+        </h1>
+        <p class="hero-desc">
+            Sadece bir spor salonu değil, potansiyelini keşfedeceğin yer.
+            Yapay zeka destekli analizler ve uzman antrenörlerle hedefine ulaş.
+        </p>
+        <div class="d-flex gap-3">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-custom btn-lg">ÜCRETSİZ DENE</a>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-custom btn-lg">GİRİŞ YAP</a>
+            }
+            else
+            {
+                <a asp-controller="Appointment" asp-action="Create" class="btn btn-custom btn-lg">RANDEVU OLUŞTUR</a>
+            }
         </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Randevularım</h5>
-                    <p class="card-text">Geçmiş ve aktif randevularını görüntüle.</p>
-                    <a asp-controller="Appointment" asp-action="Index" class="btn btn-outline-primary">
-                        Görüntüle
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Admin Panel</h5>
-                    <p class="card-text">Salon, hizmet, eğitmen, müsaitlik ve randevuları yönet.</p>
-                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-dark">
-                        Dashboard
-                    </a>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
+
+<section class="section-grey">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title">NEDEN IRON PULSE?</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="service-card">
+                    <i class="fas fa-dumbbell service-icon"></i>
+                    <h3>PROFESYONEL EKİPMAN</h3>
+                    <p class="text-muted">Dünya standartlarında TechnoGym ve Rogue ekipmanlarıyla antrenman kaliteni artır.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card">
+                    <i class="fas fa-brain service-icon"></i>
+                    <h3>AI DESTEKLİ ANALİZ</h3>
+                    <p class="text-muted">Yapay zeka asistanımız vücut tipine göre sana en uygun programı ve diyeti hazırlar.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card">
+                    <i class="fas fa-calendar-check service-icon"></i>
+                    <h3>ESNEK RANDEVU</h3>
+                    <p class="text-muted">İstediğin antrenörden, istediğin saatte randevu al. Programını sen yönet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-dark">
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-md-6">
+                <h2 class="section-title">HİZMETLERİMİZ</h2>
+            </div>
+            <div class="col-md-6 text-end">
+                <a asp-controller="Service" asp-action="Index" class="btn btn-outline-custom">TÜMÜNÜ GÖR</a>
+            </div>
+        </div>
+
+        <div class="row g-0">
+            <div class="col-md-6">
+                <div style="height: 300px; background: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070') center/cover;"></div>
+            </div>
+            <div class="col-md-6 d-flex align-items-center bg-dark text-white p-5">
+                <div>
+                    <h3>PERSONAL TRAINING</h3>
+                    <p class="text-muted mt-3">Birebir ilgi ile hedeflerine en kısa sürede ulaş. Eğitmenlerimiz sadece senin gelişimin için orada.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-center bg-dark text-white p-5">
+                <div>
+                    <h3>GRUP DERSLERİ</h3>
+                    <p class="text-muted mt-3">Yoga, Pilates, HIIT ve daha fazlası. Enerji dolu grup dersleriyle motivasyonunu yüksek tut.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="height: 300px; background: url('https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2070') center/cover;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="background: var(--primary-color); padding: 80px 0;">
+    <div class="container text-center">
+        <h2 style="color: black; font-size: 3.5rem; font-weight: 800;">HAZIR MISIN?</h2>
+        <p class="lead text-dark mb-4 fw-bold">Erteleme. Bugün başla, yarın değişimi hisset.</p>
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-dark btn-lg px-5 py-3 rounded-0">ÜYE OL</a>
+        }
+    </div>
+</section>

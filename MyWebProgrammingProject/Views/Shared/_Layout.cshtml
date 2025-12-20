@@ -1,88 +1,60 @@
-﻿﻿
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MyWebProgrammingProject</title>
+    <title>@ViewData["Title"] - IRON PULSE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MyWebProgrammingProject.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">🏋️ MyFitness</a>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand brand-font" asp-controller="Home" asp-action="Index">
+                    IRON<span class="text-primary-custom">PULSE</span>
+                </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
-                        </li>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">ANA SAYFA</a></li>
 
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
-                            @if (User.IsInRole("Member"))
+                            if (User.IsInRole("Member"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Appointment" asp-action="Create">➕ Randevu Al</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Appointment" asp-action="Index">📅 Randevularım</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="AiCoach" asp-action="Index">🤖 AI Koç</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Appointment" asp-action="Create">RANDEVU AL</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Appointment" asp-action="Index">PROGRAMIM</a></li>
                             }
-
-                            @if (User.IsInRole("Admin"))
+                            if (User.IsInRole("Admin"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">📌 Dashboard</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Gym" asp-action="Index">🏢 Salon Yönetimi</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Service" asp-action="Index">🧘 Hizmetler</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Trainer" asp-action="Index">🏋️ Eğitmenler</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="TrainerAvailability" asp-action="Index">🗓️ Müsaitlik</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Appointment" asp-action="Index">📊 Randevular</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link text-warning" asp-controller="Admin" asp-action="Dashboard">YÖNETİM PANELİ</a></li>
                             }
-                        }
-                    </ul>
-
-                    <ul class="navbar-nav ms-auto">
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <span class="navbar-text me-3">👤 @User.Identity.Name</span>
+                            <li class="nav-item ms-3">
+                                <span class="nav-link user-badge">@User.Identity.Name</span>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item ms-2">
                                 <form asp-area="Identity" asp-page="/Account/Logout" method="post">
-                                    <button type="submit" class="btn btn-outline-light btn-sm">Çıkış</button>
+                                    <button type="submit" class="btn btn-outline-custom btn-sm">ÇIKIŞ</button>
                                 </form>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="btn btn-outline-light btn-sm me-2" asp-area="Identity" asp-page="/Account/Login">Giriş</a>
+                            <li class="nav-item ms-3">
+                                <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">GİRİŞ</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="btn btn-warning btn-sm" asp-area="Identity" asp-page="/Account/Register">Kayıt Ol</a>
+                            <li class="nav-item ms-2">
+                                <a class="btn btn-custom" asp-area="Identity" asp-page="/Account/Register">ÜYE OL</a>
                             </li>
                         }
                     </ul>
@@ -91,21 +63,53 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main" class="main-content">
+        @RenderBody()
+    </main>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer-custom">
         <div class="container">
-            &copy; 2025 - MyWebProgrammingProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h3 class="footer-brand">IRON<span class="text-primary-custom">PULSE</span></h3>
+                    <p class="text-muted">Sınırlarını zorla, değişimi başlat. Profesyonel ekipmanlar ve uzman kadro ile hizmetinizdeyiz.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white">HIZLI ERİŞİM</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">Hizmetler</a></li>
+                        <li><a href="#" class="footer-link">Eğitmenler</a></li>
+                        <li><a href="#" class="footer-link">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white">BİZİ TAKİP ET</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4 pt-3 border-top border-dark">
+                <small class="text-muted">&copy; 2025 IRON PULSE GYM. Tüm hakları saklıdır.</small>
+            </div>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('#mainNav').addClass('navbar-scrolled');
+            } else {
+                $('#mainNav').removeClass('navbar-scrolled');
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
