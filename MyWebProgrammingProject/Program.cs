@@ -5,31 +5,48 @@ using MyWebProgrammingProject.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ===============================
 // DbContext
+// ===============================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity + Roles
+// ===============================
+// Identity + ROLLER + ŞİFRE POLİCY FIX 🔥
+// ===============================
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
+
+    // 🔓 ŞİFRE KURALLARINI GEVŞETİYORUZ
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 3;
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// ===============================
 // MVC + Razor Pages
+// ===============================
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// 🔹 ROL VE ADMIN SEED
+// ===============================
+// 🔐 ROL + ADMIN SEED (KESİN ÇALIŞIR)
+// ===============================
 using (var scope = app.Services.CreateScope())
 {
-    await CreateRolesAsync(scope.ServiceProvider);
+    await CreateRolesAndAdminAsync(scope.ServiceProvider);
 }
 
-// HTTP pipeline
+// ===============================
+// HTTP PIPELINE
+// ===============================
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -55,14 +72,16 @@ app.MapRazorPages();
 app.Run();
 
 
-// ===== ROL ve DEFAULT ADMIN OLUŞTURMA =====
-static async Task CreateRolesAsync(IServiceProvider serviceProvider)
+// =====================================================
+// 🔐 ROLE + ADMIN OLUŞTURMA (FINAL, BUGSIZ)
+// =====================================================
+static async Task CreateRolesAndAdminAsync(IServiceProvider serviceProvider)
 {
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
+    // Roller
     string[] roles = { "Admin", "Member" };
-
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -71,8 +90,9 @@ static async Task CreateRolesAsync(IServiceProvider serviceProvider)
         }
     }
 
-    string adminEmail = "admin@sakarya.edu.tr";
-    string password = "sau123";
+    // 👑 ADMIN BİLGİLERİ
+    string adminEmail = "b231210079@sakarya.edu.tr";
+    string adminPassword = "sau";
 
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -82,12 +102,24 @@ static async Task CreateRolesAsync(IServiceProvider serviceProvider)
         {
             UserName = adminEmail,
             Email = adminEmail,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            FullName = "Admin Kullanıcı"
         };
 
-        var result = await userManager.CreateAsync(adminUser, password);
+        var result = await userManager.CreateAsync(adminUser, adminPassword);
 
         if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+    }
+    else
+    {
+        // 🔁 ŞİFREYİ GARANTİYE AL
+        var token = await userManager.GeneratePasswordResetTokenAsync(adminUser);
+        await userManager.ResetPasswordAsync(adminUser, token, adminPassword);
+
+        if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }

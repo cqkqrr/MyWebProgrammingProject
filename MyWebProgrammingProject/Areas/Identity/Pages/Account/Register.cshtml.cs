@@ -71,34 +71,22 @@ namespace MyWebProgrammingProject.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Ad Soyad zorunludur")]
+            public string FullName { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "E-posta zorunludur")]
             [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+            public string Email { get; set; } = string.Empty;
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Şifre zorunludur")]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            public string Password { get; set; }
+            public string Password { get; set; } = string.Empty;
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
+            [Compare("Password", ErrorMessage = "Şifreler uyuşmuyor")]
+            public string ConfirmPassword { get; set; } = string.Empty;
         }
+
 
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -159,15 +147,20 @@ namespace MyWebProgrammingProject.Areas.Identity.Pages.Account
         {
             try
             {
-                return Activator.CreateInstance<ApplicationUser>();
+                var user = Activator.CreateInstance<ApplicationUser>();
+
+                // 🔥 AD SOYAD BURADA USER'A AKTARILIYOR
+                user.FullName = Input.FullName;
+
+                return user;
             }
             catch
             {
                 throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
             }
         }
+
 
         private IUserEmailStore<ApplicationUser> GetEmailStore()
         {

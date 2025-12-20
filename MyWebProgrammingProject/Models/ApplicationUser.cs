@@ -8,7 +8,7 @@ namespace MyWebProgrammingProject.Models
     {
         [Required]
         [Display(Name = "Ad Soyad")]
-        public string FullName { get; set; }
+        public string FullName { get; set; } = string.Empty;
 
         [Display(Name = "Boy (cm)")]
         public double? Height { get; set; }

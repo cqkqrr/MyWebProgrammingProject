@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using MyWebProgrammingProject.Data;
 
-namespace MyWebProgrammingProject.Controllers
+namespace MyWebProgrammingProject.Controllers.Api
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class TrainersApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -15,29 +15,36 @@ namespace MyWebProgrammingProject.Controllers
             _context = context;
         }
 
-        // 1️⃣ Tüm antrenörleri getir
+        // ----------------------------
+        // 1️⃣ TÜM EĞİTMENLER
+        // GET: /api/trainersapi
+        // ----------------------------
         [HttpGet]
-        public async Task<IActionResult> GetAllTrainers()
+        public async Task<IActionResult> GetAll()
         {
             var trainers = await _context.Trainers
                 .Select(t => new
                 {
                     t.Id,
                     t.FullName,
-                    t.Expertise
+                    t.Expertise,
+                    Gym = t.Gym.Name
                 })
                 .ToListAsync();
 
             return Ok(trainers);
         }
 
-        // 2️⃣ Belirli tarihte müsait antrenörler
+        // ----------------------------
+        // 2️⃣ TARİHE GÖRE MÜSAİT EĞİTMENLER
+        // GET: /api/trainersapi/available?date=2025-01-01
+        // ----------------------------
         [HttpGet("available")]
         public async Task<IActionResult> GetAvailableTrainers(DateTime date)
         {
             var trainers = await _context.Trainers
                 .Where(t =>
-                    _context.TrainerAvailabilities.Any(a =>
+                    !_context.Appointments.Any(a =>
                         a.TrainerId == t.Id &&
                         a.StartTime.Date == date.Date
                     )

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWebProgrammingProject.Data;
 
@@ -11,9 +12,11 @@ using MyWebProgrammingProject.Data;
 namespace MyWebProgrammingProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251219211110_FixCascadePathIssue")]
+    partial class FixCascadePathIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +79,20 @@ namespace MyWebProgrammingProject.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "bcd321b9-6c51-46d4-9b74-659f737bf161",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "d897c8b5-22c5-4a4e-855e-921535b45e06",
+                            Name = "Member",
+                            NormalizedName = "MEMBER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -165,6 +182,13 @@ namespace MyWebProgrammingProject.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "70d01384-77ce-40fb-a940-fc1ae82f2ee6",
+                            RoleId = "bcd321b9-6c51-46d4-9b74-659f737bf161"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -267,6 +291,25 @@ namespace MyWebProgrammingProject.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "70d01384-77ce-40fb-a940-fc1ae82f2ee6",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "7586e7eb-2d93-4457-93e7-e6812163f080",
+                            Email = "g231210000@sakarya.edu.tr",
+                            EmailConfirmed = true,
+                            FullName = "Admin Soyad",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "G231210000@SAKARYA.EDU.TR",
+                            NormalizedUserName = "G231210000@SAKARYA.EDU.TR",
+                            PasswordHash = "AQAAAAIAAYagAAAAEANOwMTER2XjpMUY5RygTPngFE6eMhMknhd8r9h4CAS6BbCYKUvETKQaqsR5l3+kyQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "52dfb522-a988-4893-aef1-e25fd24bdcc9",
+                            TwoFactorEnabled = false,
+                            UserName = "g231210000@sakarya.edu.tr"
+                        });
                 });
 
             modelBuilder.Entity("MyWebProgrammingProject.Models.Appointment", b =>
@@ -276,6 +319,9 @@ namespace MyWebProgrammingProject.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AppointmentDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");

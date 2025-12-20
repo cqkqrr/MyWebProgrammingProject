@@ -10,25 +10,112 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MyWebProgrammingProject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                    🏋️ MyFitness
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <!-- HERKES -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <!-- ÜYE -->
+                            @if (User.IsInRole("Member"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Appointment" asp-action="Create">
+                                        ➕ Randevu Al
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Appointment" asp-action="Index">
+                                        📅 Randevularım
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        🤖 AI Öneri
+                                    </a>
+                                </li>
+                            }
+
+                            <!-- ADMIN -->
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Trainer" asp-action="Index">
+                                        🏋️ Eğitmenler
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Service" asp-action="Index">
+                                        🧘 Hizmetler
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Appointment" asp-action="Index">
+                                        📊 Randevular
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    <!-- SAĞ TARAF -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="navbar-text me-3">
+                                    👤 @User.Identity.Name
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                                    <button type="submit" class="btn btn-outline-light btn-sm">
+                                        Çıkış
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light btn-sm me-2"
+                                   asp-area="Identity"
+                                   asp-page="/Account/Login">
+                                    Giriş
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-warning btn-sm"
+                                   asp-area="Identity"
+                                   asp-page="/Account/Register">
+                                    Kayıt Ol
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
