@@ -3,45 +3,80 @@
 
 @{
     ViewData["Title"] = "Giriş Yap";
+    Layout = null; // Kendi özel tasarımımızı kullanacağımız için Layout'u kapattık
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-lg">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4">🔐 Giriş Yap</h3>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - IRON PULSE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
 
-                    <form method="post">
-                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+    <div class="container-fluid p-0">
+        <div class="row g-0 auth-wrapper">
 
-                        <div class="mb-3">
-                            <label asp-for="Input.Email" class="form-label">E-posta</label>
-                            <input asp-for="Input.Email" class="form-control" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.Password" class="form-label">Şifre</label>
-                            <input asp-for="Input.Password" class="form-control" />
-                        </div>
-
-                        <div class="form-check mb-3">
-                            <input asp-for="Input.RememberMe" class="form-check-input" />
-                            <label class="form-check-label">Beni Hatırla</label>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            Giriş Yap
-                        </button>
-                    </form>
-
-                    <hr />
-
-                    <div class="text-center">
-                        <a asp-page="./Register">Hesabın yok mu? Kayıt Ol</a>
+            <div class="col-lg-7 d-none d-lg-block auth-image-side">
+                <div class="d-flex align-items-end h-100 p-5 position-relative" style="z-index: 2;">
+                    <div class="text-white">
+                        <h1 class="display-4 fw-bold" style="font-family: 'Oswald', sans-serif;">SINIRLARINI ZORLA.</h1>
+                        <p class="lead">Bugün yapacağın antrenman, yarınki gücünün kaynağıdır.</p>
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-5 auth-form-side">
+                <div class="auth-box">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold display-6 text-white" style="font-family: 'Oswald', sans-serif;">
+                            IRON<span style="color: #d63384;">PULSE</span>
+                        </h2>
+                        <p class="text-muted">Hesabına giriş yap ve harekete geç.</p>
+                    </div>
+
+                    <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email">E-Posta Adresi</label>
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.Password">Şifre</label>
+                            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="checkbox mb-4">
+                            <label asp-for="Input.RememberMe" class="form-check-label text-muted">
+                                <input class="form-check-input bg-dark border-secondary" asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button id="login-submit" type="submit" class="btn btn-lg fw-bold text-white" style="background-color: #d63384; border: none;">GİRİŞ YAP</button>
+                        </div>
+
+                        <div class="text-center">
+                            <p class="mb-1 text-muted">Hesabın yok mu?</p>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="auth-link fw-bold">Hemen Üye Ol</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

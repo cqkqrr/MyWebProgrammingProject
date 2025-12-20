@@ -1,51 +1,76 @@
 ﻿@page
 @model RegisterModel
-
 @{
     ViewData["Title"] = "Kayıt Ol";
+    Layout = null;
 }
-
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4">📝 Kayıt Ol</h3>
-
-                    <form method="post">
-                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
-                        <div class="mb-3">
-                            <label asp-for="Input.FullName" class="form-label">Ad Soyad</label>
-                            <input asp-for="Input.FullName" class="form-control" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.Email" class="form-label">E-posta</label>
-                            <input asp-for="Input.Email" class="form-control" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.Password" class="form-label">Şifre</label>
-                            <input asp-for="Input.Password" class="form-control" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.ConfirmPassword" class="form-label">Şifre (Tekrar)</label>
-                            <input asp-for="Input.ConfirmPassword" class="form-control" />
-                        </div>
-
-                        <button type="submit" class="btn btn-success w-100">
-                            Kayıt Ol
-                        </button>
-                    </form>
-
-                    <hr />
-
-                    <div class="text-center">
-                        <a asp-page="./Login">Zaten hesabın var mı? Giriş Yap</a>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - IRON PULSE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0 auth-wrapper">
+            <div class="col-lg-7 d-none d-lg-block auth-image-side" style="background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1470&auto=format&fit=crop');">
+                <div class="d-flex align-items-end h-100 p-5 position-relative" style="z-index: 2;">
+                    <div class="text-white">
+                        <h1 class="display-4 fw-bold" style="font-family: 'Oswald', sans-serif;">ARAMIZA KATIL.</h1>
+                        <p class="lead">Değişim burada başlar.</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 auth-form-side">
+                <div class="auth-box">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold display-6 text-white" style="font-family: 'Oswald', sans-serif;">
+                            YENİ <span style="color: #d63384;">ÜYELİK</span>
+                        </h2>
+                    </div>
+
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.FullName" class="form-control" placeholder="Ad Soyad" />
+                            <label asp-for="Input.FullName">Ad Soyad</label>
+                            <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="name@example.com" />
+                            <label asp-for="Input.Email">E-Posta</label>
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="password" />
+                            <label asp-for="Input.Password">Şifre</label>
+                            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="password" />
+                            <label asp-for="Input.ConfirmPassword">Şifre Tekrar</label>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button id="registerSubmit" type="submit" class="btn btn-lg fw-bold text-white" style="background-color: #d63384; border: none;">KAYIT OL</button>
+                        </div>
+                        <div class="text-center">
+                            <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="auth-link fw-bold">Zaten üye misin? Giriş Yap</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</body>
+</html>

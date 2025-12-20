@@ -15,11 +15,9 @@ builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
-
-        // ✅ aynı email ile 2 kullanıcı oluşmasın
         options.User.RequireUniqueEmail = true;
 
-        // Admin şifresi "sau" olacağı için policy gevşek
+        // Şifre kuralları
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
         options.Password.RequireUppercase = false;
@@ -32,13 +30,15 @@ builder.Services
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// ✅ Gemini REST için
+// --- SERVİSLER BURADA ---
 builder.Services.AddHttpClient("Gemini");
 builder.Services.AddScoped<IAiRecommendationService, GeminiRestRecommendationService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>(); // ✅ YENİ EKLENEN
+// ------------------------
 
 var app = builder.Build();
 
-// Seed: roller + admin + örnek veri
+// Seed işlemleri
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -68,11 +68,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.MapRazorPages();
 
 app.Run();

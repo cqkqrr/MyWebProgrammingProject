@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using MyWebProgrammingProject.Models
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
@@ -11,6 +15,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <header>
@@ -39,9 +44,17 @@
                             {
                                 <li class="nav-item"><a class="nav-link text-warning" asp-controller="Admin" asp-action="Dashboard">YÖNETİM PANELİ</a></li>
                             }
+
                             <li class="nav-item ms-3">
-                                <span class="nav-link user-badge">@User.Identity.Name</span>
+                                <span class="nav-link user-badge">
+                                    @{
+                                        var appUser = await UserManager.GetUserAsync(User);
+                                        var displayName = appUser?.FullName ?? User.Identity?.Name;
+                                    }
+                                    @displayName
+                                </span>
                             </li>
+
                             <li class="nav-item ms-2">
                                 <form asp-area="Identity" asp-page="/Account/Logout" method="post">
                                     <button type="submit" class="btn btn-outline-custom btn-sm">ÇIKIŞ</button>
@@ -109,6 +122,18 @@
                 $('#mainNav').removeClass('navbar-scrolled');
             }
         });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var successMsg = '@TempData["SuccessMessage"]';
+        if (successMsg) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Harika!',
+                text: successMsg,
+                confirmButtonColor: '#d63384'
+            });
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

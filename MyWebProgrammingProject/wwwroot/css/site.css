@@ -227,3 +227,77 @@ h1, h2, h3, h4, h5, .brand-font, .nav-link, .btn {
     .social-icons a:hover {
         color: var(--primary-color);
     }
+/* --- LOGIN & REGISTER SAYFALARI ÝÇÝN MODERN TASARIM --- */
+
+/* Tam ekran kapsayýcý */
+.auth-wrapper {
+    min-height: 100vh; /* Tüm ekraný kapla */
+    display: flex;
+    align-items: stretch;
+    background-color: #121212; /* Koyu arka plan */
+}
+
+/* Sol taraftaki görsel alaný */
+.auth-image-side {
+    background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop'); /* GYM Görseli */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    min-height: 300px;
+}
+
+    /* Görselin üzerine hafif karartma */
+    .auth-image-side::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+    }
+
+/* Sað taraftaki form alaný */
+.auth-form-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #1e1e1e; /* Form zemini */
+    color: #fff;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Form Elemanlarý Özelleþtirme */
+.form-floating > .form-control {
+    background-color: #2d2d2d;
+    border: 1px solid #444;
+    color: #fff;
+}
+
+    .form-floating > .form-control:focus {
+        background-color: #333;
+        border-color: #d63384; /* Senin tema rengin (pembe/kýrmýzý) */
+        box-shadow: 0 0 0 0.25rem rgba(214, 51, 132, 0.25);
+        color: #fff;
+    }
+
+.form-floating > label {
+    color: #aaa;
+}
+
+/* Linkler */
+.auth-link {
+    color: #d63384;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+    .auth-link:hover {
+        color: #ff6b6b;
+        text-decoration: underline;
+    }

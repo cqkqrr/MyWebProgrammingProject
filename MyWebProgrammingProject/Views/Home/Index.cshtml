@@ -1,108 +1,163 @@
-﻿@{
+﻿@using MyWebProgrammingProject.Models.ViewModels
+@model dynamic
+@{
     ViewData["Title"] = "Ana Sayfa";
-    Layout = "_Layout"; // Yeni layout'u kullandığından emin olalım
 }
 
-<div class="hero-wrapper">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <h1 class="hero-title">
-            KENDİNİ <br>
-            <span>YENİDEN</span> İNŞA ET
-        </h1>
-        <p class="hero-desc">
-            Sadece bir spor salonu değil, potansiyelini keşfedeceğin yer.
-            Yapay zeka destekli analizler ve uzman antrenörlerle hedefine ulaş.
-        </p>
-        <div class="d-flex gap-3">
-            @if (!User.Identity.IsAuthenticated)
-            {
-                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-custom btn-lg">ÜCRETSİZ DENE</a>
-                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-custom btn-lg">GİRİŞ YAP</a>
-            }
-            else
-            {
-                <a asp-controller="Appointment" asp-action="Create" class="btn btn-custom btn-lg">RANDEVU OLUŞTUR</a>
-            }
+@if (User.Identity != null && User.Identity.IsAuthenticated && Model is MemberDashboardViewModel dashboard)
+{
+    <div class="container mt-5 pt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1 class="display-5 fw-bold text-white">
+                    HOŞ GELDİN, <span style="color: #d63384;">@dashboard.FullName.ToUpper()</span> 💪
+                </h1>
+                <p class="text-muted">Bugün kendini aşmaya hazır mısın?</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-dark text-white border-secondary mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted"><i class="fas fa-weight me-2"></i>KİLO</h6>
+                        <h3 class="fw-bold">@(dashboard.Weight.HasValue? dashboard.Weight + " kg" : "-")</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark text-white border-secondary mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted"><i class="fas fa-ruler-vertical me-2"></i>BOY</h6>
+                        <h3 class="fw-bold">@(dashboard.Height.HasValue? dashboard.Height + " cm" : "-")</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark text-white border-secondary mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted"><i class="fas fa-dumbbell me-2"></i>ANTRENMANLAR</h6>
+                        <h3 class="fw-bold text-success">@dashboard.TotalWorkouts</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark text-white border-secondary mb-3">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted"><i class="fas fa-bullseye me-2"></i>HEDEF</h6>
+                        <h4 class="fw-bold text-warning" style="font-size: 1.1rem;">@dashboard.Goal</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-dark text-white border-secondary h-100">
+                    <div class="card-header border-secondary bg-transparent d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">📅 SIRADAKİ RANDEVU</h5>
+                        @if (dashboard.NextAppointment != null)
+                        {
+                            <span class="badge bg-primary">Onaylı</span>
+                        }
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                        @if (dashboard.NextAppointment != null)
+                        {
+                            <h2 class="display-6 fw-bold mb-3">@dashboard.NextAppointment.StartTime.ToString("dd MMMM HH:mm")</h2>
+                            <p class="lead mb-1">
+                                <i class="fas fa-user-ninja me-2 text-warning"></i>
+                                @dashboard.NextAppointment.Trainer?.FullName
+                            </p>
+                            <p class="text-muted">
+                                <i class="fas fa-bolt me-2"></i>
+                                @dashboard.NextAppointment.Service?.Name
+                            </p>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Yaklaşan bir randevun yok.</p>
+                                <a asp-controller="Appointment" asp-action="Create" class="btn btn-outline-light mt-2">Hemen Randevu Al</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card bg-dark text-white border-secondary h-100">
+                    <div class="card-header border-secondary bg-transparent">
+                        <h5 class="mb-0">⚡ HIZLI İŞLEMLER</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-3">
+                            <a asp-controller="Appointment" asp-action="Create" class="btn btn-lg btn-danger text-start">
+                                <i class="fas fa-plus-circle me-3"></i> Yeni Randevu Oluştur
+                            </a>
+                            <a asp-controller="AiCoach" asp-action="Index" class="btn btn-lg btn-info text-white text-start">
+                                <i class="fas fa-robot me-3"></i> AI Koç'tan Tavsiye Al
+                            </a>
+                            <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-lg btn-outline-secondary text-start">
+                                <i class="fas fa-user-edit me-3"></i> Profilimi Düzenle (Boy/Kilo)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<section class="section-grey">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-                <h2 class="section-title">NEDEN IRON PULSE?</h2>
+}
+else
+{
+    <section class="hero-section d-flex align-items-center text-center text-white">
+        <div class="container">
+            <h1 class="display-1 fw-bold mb-4 animate-fade-in">IRON<span class="text-primary-custom">PULSE</span></h1>
+            <p class="lead mb-5 animate-slide-up">
+                Sıradan olma. Sınırlarını zorla. Profesyonel antrenörler ve yapay zeka destekli programlar ile değişimi başlat.
+            </p>
+            <div class="d-flex justify-content-center gap-3 animate-slide-up delay-1">
+                <a class="btn btn-custom btn-lg px-5 py-3" asp-area="Identity" asp-page="/Account/Register">HEMEN BAŞLA</a>
+                <a class="btn btn-outline-light btn-lg px-5 py-3" asp-area="Identity" asp-page="/Account/Login">GİRİŞ YAP</a>
             </div>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="fas fa-dumbbell service-icon"></i>
-                    <h3>PROFESYONEL EKİPMAN</h3>
-                    <p class="text-muted">Dünya standartlarında TechnoGym ve Rogue ekipmanlarıyla antrenman kaliteni artır.</p>
+    </section>
+
+    <section class="py-5 bg-darker">
+        <div class="container">
+            <div class="row text-center text-white">
+                <div class="col-md-4 mb-4">
+                    <i class="fas fa-dumbbell fa-3x text-primary-custom mb-3"></i>
+                    <h4>Modern Ekipmanlar</h4>
+                    <p class="text-muted">En son teknoloji fitness ekipmanları ile çalışın.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="fas fa-brain service-icon"></i>
-                    <h3>AI DESTEKLİ ANALİZ</h3>
-                    <p class="text-muted">Yapay zeka asistanımız vücut tipine göre sana en uygun programı ve diyeti hazırlar.</p>
+                <div class="col-md-4 mb-4">
+                    <i class="fas fa-user-friends fa-3x text-primary-custom mb-3"></i>
+                    <h4>Uzman Kadro</h4>
+                    <p class="text-muted">Alanında uzman antrenörlerden birebir destek alın.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="fas fa-calendar-check service-icon"></i>
-                    <h3>ESNEK RANDEVU</h3>
-                    <p class="text-muted">İstediğin antrenörden, istediğin saatte randevu al. Programını sen yönet.</p>
+                <div class="col-md-4 mb-4">
+                    <i class="fas fa-brain fa-3x text-primary-custom mb-3"></i>
+                    <h4>AI Destekli Program</h4>
+                    <p class="text-muted">Yapay zeka ile kişisel gelişiminizi analiz edin.</p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 
-<section class="section-dark">
-    <div class="container">
-        <div class="row align-items-center mb-5">
-            <div class="col-md-6">
-                <h2 class="section-title">HİZMETLERİMİZ</h2>
-            </div>
-            <div class="col-md-6 text-end">
-                <a asp-controller="Service" asp-action="Index" class="btn btn-outline-custom">TÜMÜNÜ GÖR</a>
-            </div>
-        </div>
+<style>
+    /* Sadece bu sayfaya özel ufak stiller */
+    .bg-darker {
+        background-color: #000;
+    }
 
-        <div class="row g-0">
-            <div class="col-md-6">
-                <div style="height: 300px; background: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070') center/cover;"></div>
-            </div>
-            <div class="col-md-6 d-flex align-items-center bg-dark text-white p-5">
-                <div>
-                    <h3>PERSONAL TRAINING</h3>
-                    <p class="text-muted mt-3">Birebir ilgi ile hedeflerine en kısa sürede ulaş. Eğitmenlerimiz sadece senin gelişimin için orada.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 d-flex align-items-center bg-dark text-white p-5">
-                <div>
-                    <h3>GRUP DERSLERİ</h3>
-                    <p class="text-muted mt-3">Yoga, Pilates, HIIT ve daha fazlası. Enerji dolu grup dersleriyle motivasyonunu yüksek tut.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div style="height: 300px; background: url('https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2070') center/cover;"></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section style="background: var(--primary-color); padding: 80px 0;">
-    <div class="container text-center">
-        <h2 style="color: black; font-size: 3.5rem; font-weight: 800;">HAZIR MISIN?</h2>
-        <p class="lead text-dark mb-4 fw-bold">Erteleme. Bugün başla, yarın değişimi hisset.</p>
-        @if (!User.Identity.IsAuthenticated)
-        {
-            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-dark btn-lg px-5 py-3 rounded-0">ÜYE OL</a>
-        }
-    </div>
-</section>
+    .hero-section {
+        height: 100vh;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80');
+        background-size: cover;
+        background-position: center;
+        margin-top: -80px; /* Navbar payı */
+    }
+</style>
